@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>PrinceLab – Smart Automation & AI Helpers</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #1b4b82, #050814);
+      color: #f9fafb;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .card {
+      max-width: 720px;
+      width: 100%;
+      background: rgba(15, 23, 42, 0.92);
+      border-radius: 18px;
+      padding: 32px 28px;
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(37, 99, 235, 0.15);
+      font-size: 13px;
+      color: #bfdbfe;
+      margin-bottom: 14px;
+    }
+    .pill span {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+    }
+    h1 {
+      font-size: clamp(28px, 4vw, 34px);
+      margin-bottom: 10px;
+    }
+    h1 span {
+      color: #60a5fa;
+    }
+    .tagline {
+      font-size: 15px;
+      color: #cbd5f5;
+      margin-bottom: 22px;
+      max-width: 520px;
+      line-height: 1.5;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: 20px;
+      margin-bottom: 22px;
+    }
+    .section-title {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #9ca3af;
+      margin-bottom: 6px;
+    }
+    ul {
+      list-style: none;
+      font-size: 14px;
+      color: #e5e7eb;
+    }
+    li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    li::before {
+      content: "•";
+      color: #60a5fa;
+      margin-top: 1px;
+    }
+    .box {
+      background: rgba(15, 23, 42, 0.9);
+      border-radius: 12px;
+      padding: 10px 12px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      font-size: 13px;
+      color: #d1d5db;
+      line-height: 1.5;
+    }
+    .footer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      color: #9ca3af;
+    }
+    .cta {
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid #60a5fa;
+      color: #dbeafe;
+      text-decoration: none;
+      font-size: 13px;
+    }
+    @media (max-width: 640px) {
+      .card { padding: 24px 18px; }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="pill">
+      <span></span>
+      <strong>PrinceLab</strong> · Smart helpers for real communities
+    </div>
+
+    <h1>Automation & AI agents by <span>PrinceLab</span></h1>
+    <p class="tagline">
+      Experiments in practical AI – from WhatsApp community assistants to simple tools
+      that save people time. Starting small, focused on real-world use, not hype.
+    </p>
+
+    <div class="grid">
+      <section>
+        <div class="section-title">What I'm building</div>
+        <ul>
+          <li>Community helpers (like a quiet WhatsApp assistant for local groups).</li>
+          <li>Small tools for organising information and workflows.</li>
+          <li>Automation ideas that remove repetitive manual work.</li>
+        </ul>
+      </section>
+
+      <section>
+        <div class="section-title">Status</div>
+        <div class="box">
+          PrinceLab is in an early build phase.<br>
+          I’m testing ideas with a small number of real users and communities first,
+          then opening things more widely.
+        </div>
+      </section>
+    </div>
+
+    <div class="footer">
+      <div>Based in Melbourne, Australia · princelab.au</div>
+      <a class="cta" href="mailto:hello@princelab.au">Contact: hello@princelab.au</a>
+    </div>
+  </main>
+</body>
+</html>
