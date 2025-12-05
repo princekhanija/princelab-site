@@ -84,6 +84,16 @@
       width: 56px;
       height: auto;
     }
+        .pl-logo-icon {
+      width: 40px;
+      height: 40px;
+      margin-right: 10px;
+      fill: #4b5563;        /* base dots */
+    }
+
+    .pl-logo-icon .spark {
+      fill: #38bdf8;        /* cyan accent */
+    }
 
     .brand .title {
       font-weight: 700;
@@ -288,14 +298,31 @@
 <body>
   <div class="page">
     <a class="skip-link" href="#content">Skip to main content</a>
-    <header class="header" role="banner">
-      <a class="brand" href="#top">
-        <img src="princelab-logo-main.png" alt="PrinceLab logo" />
+          <a class="brand" href="#top">
+        <!-- Spark Grid logo -->
+        <svg class="pl-logo-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <!-- background dots -->
+          <circle cx="6" cy="6" r="2" />
+          <circle cx="12" cy="6" r="2" />
+          <circle cx="18" cy="6" r="2" />
+          <circle cx="6" cy="12" r="2" />
+          <circle cx="18" cy="12" r="2" />
+          <circle cx="6" cy="18" r="2" />
+          <circle cx="12" cy="18" r="2" />
+          <circle cx="18" cy="18" r="2" />
+          <!-- accent spark in the centre -->
+          <path class="spark"
+            d="M12 9.5 L12.7 11.3 L14.5 12 L12.7 12.7 L12 14.5 L11.3 12.7 L9.5 12 L11.3 11.3 Z" />
+        </svg>
+
         <div>
           <div class="title">PrinceLab</div>
-          <div style="color: var(--muted); font-size: 0.95rem;">Smart helpers for real communities</div>
+          <div style="color: var(--muted); font-size: 0.95rem;">
+            Smart helpers for real communities
+          </div>
         </div>
       </a>
+
       <nav class="nav" aria-label="Primary">
         <a href="#about">About</a>
         <a href="#projects">Projects</a>
