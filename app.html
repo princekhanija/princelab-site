@@ -5,82 +5,348 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart Shop - PrinceLab</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; }
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #111827; }
+        ::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #22d3ee; }
     </style>
 </head>
-<body class="bg-gray-950 text-white h-screen flex flex-col">
+<body class="bg-gray-950 text-white h-screen flex flex-col overflow-hidden">
 
-    <nav class="flex justify-between items-center p-6 border-b border-gray-800">
+    <nav class="flex justify-between items-center p-6 border-b border-gray-800 shrink-0">
         <a href="index.html" class="flex items-center gap-2 group">
-             <svg class="w-8 h-8 group-hover:scale-110 transition-transform duration-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g class="fill-gray-600">
                   <circle cx="6" cy="6" r="2" /> <circle cx="12" cy="6" r="2" /> <circle cx="18" cy="6" r="2" />
                   <circle cx="6" cy="12" r="2" /> <circle cx="18" cy="12" r="2" />
                   <circle cx="6" cy="18" r="2" /> <circle cx="12" cy="18" r="2" /> <circle cx="18" cy="18" r="2" />
                 </g>
-                <path class="fill-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]" d="M12 9.5 L12.7 11.3 L14.5 12 L12.7 12.7 L12 14.5 L11.3 12.7 L9.5 12 L11.3 11.3 Z" />
+                <path class="fill-cyan-400" d="M12 9.5 L12.7 11.3 L14.5 12 L12.7 12.7 L12 14.5 L11.3 12.7 L9.5 12 L11.3 11.3 Z" />
             </svg>
             <span class="font-bold text-xl tracking-tight">PrinceLab <span class="text-cyan-400">AI</span></span>
         </a>
         <a href="index.html" class="text-gray-400 hover:text-white transition-colors text-sm">← Back to Home</a>
     </nav>
 
-    <main class="flex-grow flex flex-col items-center justify-center p-4">
-        <div class="w-full max-w-lg space-y-8">
+    <main class="flex-grow flex flex-col items-center justify-center p-4 w-full max-w-3xl mx-auto relative">
+        
+        <div id="step-input" class="w-full space-y-6 fade-in">
             <div class="text-center space-y-2">
-                <h1 class="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-600">
-                    Smart Shopping Agent
+                <h1 class="text-3xl font-bold ...">
+                    Smart Shopping Agent <span class="text-sm text-red-500">v5.0</span>
                 </h1>
-                <p class="text-gray-400 text-sm">
-                    Paste a product link. We'll find the best offline & online prices + cheaper alternatives.
-                </p>
+                <p class="text-gray-400 text-sm">Find the absolute best deals, online or nearby.</p>
             </div>
-
-            <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl shadow-2xl relative overflow-hidden group focus-within:border-cyan-500 transition-colors">
-                <div class="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 opacity-0 group-focus-within:opacity-100 transition-opacity pointer-events-none"></div>
-                <label class="block text-xs font-semibold text-cyan-400 uppercase tracking-wider mb-2">Product URL</label>
-                <div class="flex gap-2">
-                    <input type="text" id="productUrl" 
-                        placeholder="Paste link here (e.g., Amazon, JB Hi-Fi...)" 
-                        class="w-full bg-gray-950 text-white rounded-lg px-4 py-3 outline-none border border-gray-700 focus:border-cyan-400 transition-all placeholder-gray-600">
-                </div>
-                <button id="scoutBtn" class="w-full mt-4 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform active:scale-95 transition-all flex justify-center items-center gap-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                    Scout Best Deals
+            <div class="bg-gray-900 border border-gray-800 p-2 rounded-xl flex gap-2 focus-within:border-cyan-500 transition-colors shadow-lg">
+                <input type="text" id="productInput" 
+                    placeholder="Paste link or product name (e.g. Sony WH-1000XM5)" 
+                    class="w-full bg-transparent text-white px-4 py-3 outline-none placeholder-gray-600">
+                <button id="identifyBtn" class="bg-cyan-600 hover:bg-cyan-500 text-white px-6 py-2 rounded-lg font-bold transition-all whitespace-nowrap">
+                    Identify Item
                 </button>
             </div>
-
-            <div id="resultsArea" class="hidden mt-6">
-                <div class="bg-gray-800/50 rounded-xl p-4 border border-gray-700 text-center">
-                    <p class="text-gray-400">AI Agent is ready...</p>
-                </div>
-            </div>
         </div>
+
+        <div id="step-clarify" class="w-full space-y-6 hidden fade-in">
+            <div class="text-center">
+                <h2 class="text-2xl font-bold text-white">Which one?</h2>
+                <p class="text-gray-400 text-sm mt-2">Select the exact model to get accurate pricing.</p>
+            </div>
+            <div id="clarifyOptions" class="grid gap-3"></div>
+            <button onclick="resetApp()" class="w-full text-gray-500 text-sm hover:text-white mt-4">Cancel</button>
+        </div>
+
+        <div id="step-dashboard" class="w-full h-full max-h-[80vh] flex flex-col space-y-4 hidden fade-in">
+            
+            <div class="text-center shrink-0">
+                <span class="text-cyan-400 text-xs font-bold uppercase tracking-widest bg-cyan-900/20 px-3 py-1 rounded-full">Active Target</span>
+                <h2 id="finalProductName" class="text-2xl font-bold text-white mt-2 truncate px-4">Product Name</h2>
+                <button onclick="resetApp()" class="text-xs text-gray-500 underline hover:text-cyan-400 mt-1">Start Over</button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 shrink-0">
+                <button onclick="handleOption('online')" class="action-btn bg-gray-800 hover:bg-gray-700 border border-gray-700 p-4 rounded-xl flex flex-col items-center gap-2 transition-all group hover:border-cyan-400">
+                    <div class="bg-blue-900/30 p-2 rounded-full group-hover:bg-blue-600 transition-colors">
+                        <svg class="w-5 h-5 text-blue-400 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" /></svg>
+                    </div>
+                    <div class="text-center">
+                        <span class="block font-bold text-sm text-white">Best Price Online</span>
+                        <span class="block text-xs text-gray-400">Top 3 Websites</span>
+                    </div>
+                </button>
+
+                <button onclick="handleOption('local')" class="action-btn bg-gray-800 hover:bg-gray-700 border border-gray-700 p-4 rounded-xl flex flex-col items-center gap-2 transition-all group hover:border-green-400">
+                    <div class="bg-green-900/30 p-2 rounded-full group-hover:bg-green-600 transition-colors">
+                        <svg class="w-5 h-5 text-green-400 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                    </div>
+                    <div class="text-center">
+                        <span class="block font-bold text-sm text-white">Best Price Near Me</span>
+                        <span class="block text-xs text-gray-400">Local Stores</span>
+                    </div>
+                </button>
+
+                <button onclick="handleOption('alternative')" class="action-btn bg-gray-800 hover:bg-gray-700 border border-gray-700 p-4 rounded-xl flex flex-col items-center gap-2 transition-all group hover:border-purple-400">
+                    <div class="bg-purple-900/30 p-2 rounded-full group-hover:bg-purple-600 transition-colors">
+                        <svg class="w-5 h-5 text-purple-400 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+                    </div>
+                    <div class="text-center">
+                        <span class="block font-bold text-sm text-white">Cheaper Alternative</span>
+                        <span class="block text-xs text-gray-400">Smart Recommendation</span>
+                    </div>
+                </button>
+            </div>
+            
+            <div id="aiResult" class="flex-grow overflow-y-auto bg-gray-900/50 p-4 rounded-xl border border-gray-800 text-sm hidden">
+                </div>
+        </div>
+
     </main>
 
-    <footer class="p-6 text-center text-gray-600 text-xs">
-        Powered by Gemini Pro • PrinceLab AU
-    </footer>
-
     <script>
-        const btn = document.getElementById('scoutBtn');
-        const input = document.getElementById('productUrl');
-        const results = document.getElementById('resultsArea');
 
-        btn.addEventListener('click', () => {
-            if(!input.value) { alert("Please paste a link first!"); return; }
-            const originalText = btn.innerHTML;
-            btn.innerHTML = `Analyzing...`;
-            btn.disabled = true;
-            setTimeout(() => {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-                results.classList.remove('hidden');
-                results.innerHTML = `<div class='bg-gray-800 p-4 rounded-lg border border-gray-700 text-left'><h3 class='text-cyan-400 font-bold'>Analysis Complete</h3><p class='text-gray-300 mt-1'>We are ready to connect the AI Brain.</p></div>`;
-            }, 1000);
+        // --- CONFIGURATION ---
+        let currentProduct = "";
+        
+        // PASTE YOUR KEY HERE (Ensure you have restricted it in Google Cloud Console!)
+        const API_KEY = "AIzaSyA-rQiCtDyPu5yhCWnwf-BSVNj9cNEj5oY"; // <--- Replace this with your actual key
+
+        // --- DOM ELEMENTS ---
+        const stepInput = document.getElementById('step-input');
+        const stepClarify = document.getElementById('step-clarify');
+        const stepDashboard = document.getElementById('step-dashboard');
+        const inputField = document.getElementById('productInput');
+        const identifyBtn = document.getElementById('identifyBtn');
+        const aiResult = document.getElementById('aiResult');
+
+        // --- STEP 1: IDENTIFY ---
+        identifyBtn.addEventListener('click', async () => {
+            const rawInput = inputField.value.trim();
+            if(!rawInput) return alert("Enter a product!");
+
+            identifyBtn.innerHTML = "Scanning...";
+            identifyBtn.disabled = true;
+
+            const prompt = `
+                I have this input: "${rawInput}".
+                Is this a specific product? 
+                
+                Rules:
+                1. If it's a generic term (e.g. "Sony headphones"), return exactly 3 distinct, popular specific model names separated by pipes "|".
+                2. If it's a URL or specific name (e.g. "WH-1000XM5"), return just that ONE specific name.
+                3. Do not add any other text.
+            `;
+
+            try {
+                // Now this function exists again!
+                const text = await callGemini(prompt, false);
+                
+                if (text.includes("|")) {
+                    const options = text.split("|").map(s => s.trim());
+                    showClarification(options);
+                } else {
+                    showDashboard(text.trim());
+                }
+            } catch (e) {
+                alert("Error: " + e.message);
+            } finally {
+                identifyBtn.innerHTML = "Identify Item";
+                identifyBtn.disabled = false;
+            }
         });
+
+        // --- STEP 2: OPTIONS ---
+        async function handleOption(type) {
+            // UI Loading
+            aiResult.classList.remove('hidden');
+            aiResult.innerHTML = `<div class="flex flex-col items-center justify-center h-full space-y-3">
+                <svg class="animate-spin h-8 w-8 text-cyan-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                <p class="text-cyan-400 animate-pulse">Scouring the web...</p>
+            </div>`;
+
+            let prompt = "";
+
+            if (type === 'online') {
+                prompt = `
+                    Search for the current live price of "${currentProduct}" in Australia (AUD).
+                    Find the 3 best reputed online retailers (e.g., Amazon AU, JB Hi-Fi, Officeworks).
+                    IMPORTANT: Ensure the price is for the MAIN product, not an accessory.
+                    
+                    Return STRICT JSON format only:
+                    [ { "retailer": "Store Name", "price": "$XXX", "link": "Link" }, ... ]
+                `;
+                processAI(prompt, 'online');
+            } 
+            else if (type === 'local') {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const { latitude, longitude } = position.coords;
+                        prompt = `
+                            User Location: ${latitude}, ${longitude} (Australia).
+                            Search for physical stores near this location that stock "${currentProduct}".
+                            
+                            CRITICAL RULES FOR ADDRESS:
+                            1. Return the Suburb or Street Name.
+                            2. If address is not found, return "Local Stockist".
+                            3. NEVER return "Unknown". NEVER return citation numbers like [1].
+                            
+                            Return STRICT JSON format only:
+                            [ { "store": "Store Name", "address": "Suburb/Street", "price": "$XXX" }, ... ]
+                        `;
+                        processAI(prompt, 'local');
+                    },
+                    (error) => {
+                        aiResult.innerHTML = `<div class="text-red-400 text-center p-4">⚠️ Location Access Denied.</div>`;
+                    }
+                );
+            } 
+            else if (type === 'alternative') {
+                prompt = `
+                    Analyze "${currentProduct}".
+                    Recommend the ONE best cheaper alternative available in Australia.
+                    Return STRICT JSON format only:
+                    { "name": "Name", "price": "$XXX", "reason": "Why better", "link": "Search link" }
+                `;
+                processAI(prompt, 'alternative');
+            }
+        }
+
+        async function processAI(prompt, mode) {
+            try {
+                // Reusing callGemini to reduce code duplication
+                const rawText = await callGemini(prompt, true);
+                const resultData = parseAIResponse(rawText); 
+                renderResults(resultData, mode);
+            } catch (error) {
+                console.error(error);
+                aiResult.innerHTML = `<div class="text-red-400 p-4">Error: ${error.message}</div>`;
+            }
+        }
+
+        // --- GEMINI HELPER (RESTORED) ---
+        async function callGemini(userPrompt, useSearch = false) {
+            const payload = {
+                contents: [{ parts: [{ text: userPrompt }] }]
+            };
+            if(useSearch) payload.tools = [{ google_search: {} }];
+
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const data = await response.json();
+            if(data.error) throw new Error(data.error.message);
+            return data.candidates[0].content.parts[0].text;
+        }
+
+        // --- PARSER & RENDERER ---
+        function parseAIResponse(text) {
+            try {
+                const jsonMatch = text.match(/(\[[\s\S]*\]|\{[\s\S]*\})/);
+                return jsonMatch ? JSON.parse(jsonMatch[0]) : JSON.parse(text);
+            } catch (e) {
+                throw new Error("Failed to parse AI data.");
+            }
+        }
+
+        function renderResults(data, mode) {
+            let html = "";
+
+            if (mode === 'online') {
+                html += `<h3 class="text-cyan-400 font-bold mb-4">Top 3 Online Deals</h3>`;
+                data.forEach(item => {
+                    html += `
+                        <a href="${item.link}" target="_blank" class="flex justify-between items-center bg-gray-800 p-3 rounded-lg mb-2 hover:bg-gray-700 hover:border-l-4 hover:border-cyan-400 transition-all group">
+                            <div class="flex flex-col">
+                                <span class="font-bold text-white group-hover:text-cyan-300">${item.retailer}</span>
+                                <span class="text-xs text-gray-400">Online Deal</span>
+                            </div>
+                            <span class="font-bold text-green-400 text-lg">${item.price}</span>
+                        </a>`;
+                });
+            } 
+            else if (mode === 'local') {
+                html += `<h3 class="text-green-400 font-bold mb-4">Available Nearby</h3>`;
+                data.forEach(item => {
+                    let cleanAddr = item.address || "Local Stockist";
+                    cleanAddr = cleanAddr.replace(/\[\d+\]/g, '').trim(); 
+                    if (cleanAddr.toLowerCase().includes('unknown') || cleanAddr.toLowerCase().includes('source')) {
+                        cleanAddr = "Check Map for Details";
+                    }
+
+                    const mapLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.store + " " + cleanAddr)}`;
+                    
+                    html += `
+                        <a href="${mapLink}" target="_blank" class="flex justify-between items-center bg-gray-800 p-3 rounded-lg mb-2 hover:bg-gray-700 hover:border-l-4 hover:border-green-400 transition-all group">
+                            <div class="flex flex-col">
+                                <span class="font-bold text-white group-hover:text-green-300">${item.store}</span>
+                                <span class="text-xs text-gray-400">${cleanAddr}</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="block font-bold text-white">${item.price}</span>
+                                <span class="text-[10px] text-gray-500 italic">Est. Price</span>
+                            </div>
+                        </a>`;
+                });
+            }
+            else if (mode === 'alternative') {
+                html += `
+                    <div class="bg-gray-800 p-5 rounded-lg border border-purple-500/30">
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <span class="text-purple-400 text-xs font-bold uppercase">Smart Alternative</span>
+                                <h3 class="text-xl font-bold text-white">${data.name}</h3>
+                            </div>
+                            <span class="bg-green-900/50 text-green-400 px-3 py-1 rounded-full font-bold">${data.price}</span>
+                        </div>
+                        <p class="text-gray-300 text-sm mb-4 leading-relaxed">${data.reason}</p>
+                        <a href="${data.link}" target="_blank" class="w-full block text-center bg-purple-600 hover:bg-purple-500 text-white py-2 rounded-lg font-bold transition-colors">
+                            View Deal
+                        </a>
+                    </div>
+                `;
+            }
+            aiResult.innerHTML = html;
+        }
+
+        // --- UI HELPERS ---
+        function showClarification(options) {
+            stepInput.classList.add('hidden');
+            stepClarify.classList.remove('hidden');
+            const container = document.getElementById('clarifyOptions');
+            container.innerHTML = "";
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left bg-gray-800 hover:bg-gray-700 p-4 rounded-lg border border-gray-700 hover:border-cyan-400 transition-all font-semibold";
+                btn.innerText = opt;
+                btn.onclick = () => showDashboard(opt);
+                container.appendChild(btn);
+            });
+        }
+
+        function showDashboard(product) {
+            currentProduct = product;
+            document.getElementById('finalProductName').innerText = product;
+            stepInput.classList.add('hidden');
+            stepClarify.classList.add('hidden');
+            stepDashboard.classList.remove('hidden');
+        }
+
+        function resetApp() {
+            stepDashboard.classList.add('hidden');
+            stepClarify.classList.add('hidden');
+            stepInput.classList.remove('hidden');
+            inputField.value = "";
+            aiResult.classList.add('hidden');
+            aiResult.innerHTML = "";
+        }
     </script>
 </body>
 </html>
