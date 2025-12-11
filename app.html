@@ -247,15 +247,48 @@
         }
 
         // --- PARSER & RENDERER ---
+        // --- IMPROVED PARSER: IGNORES CHATTY TEXT ---
         function parseAIResponse(text) {
             try {
-                const jsonMatch = text.match(/(\[[\s\S]*\]|\{[\s\S]*\})/);
-                return jsonMatch ? JSON.parse(jsonMatch[0]) : JSON.parse(text);
+                // 1. Strip Markdown code blocks (```json ... ```)
+                let clean = text.replace(/```json/g, '').replace(/```/g, '').trim();
+
+                // 2. Find the very first '[' or '{'
+                const firstSquare = clean.indexOf('[');
+                const firstCurly = clean.indexOf('{');
+                
+                // Determine which one comes first (ignoring -1)
+                let start = -1;
+                if (firstSquare !== -1 && (firstCurly === -1 || firstSquare < firstCurly)) {
+                    start = firstSquare;
+                } else {
+                    start = firstCurly;
+                }
+
+                // 3. Find the very last ']' or '}'
+                const lastSquare = clean.lastIndexOf(']');
+                const lastCurly = clean.lastIndexOf('}');
+                
+                let end = -1;
+                if (lastSquare > lastCurly) {
+                    end = lastSquare;
+                } else {
+                    end = lastCurly;
+                }
+
+                if (start === -1 || end === -1) {
+                    throw new Error("No JSON brackets found in response");
+                }
+
+                // 4. Extract ONLY the JSON part
+                const jsonString = clean.substring(start, end + 1);
+
+                return JSON.parse(jsonString);
             } catch (e) {
-                throw new Error("Failed to parse AI data.");
+                console.error("Bad AI Response:", text); // Helpful for debugging
+                throw new Error("AI returned invalid format. Please try again.");
             }
         }
-
         function renderResults(data, mode) {
             let html = "";
 
